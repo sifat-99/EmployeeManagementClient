@@ -6,18 +6,20 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../Components/Provider/AuthProvider";
 const Registration = () => {
   const [valid, setValid] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const {createUser} = useContext(AuthContext);
 
-  const userEmailPassword = {
-    email: email,
-    password: password,
-  };
-  console.log(userEmailPassword);
+//   const userEmailPassword = {
+//     email: email,
+//     password: password,
+//   };
+//   console.log(userEmailPassword);
 
   const paperStyle = {
     padding: { xs: 2, md: 6, lg: 10 },
@@ -62,8 +64,24 @@ const Registration = () => {
     } else {
       setValid("");
     }
-    console.log(password);
+    // console.log(password);
     setPassword(password);
+  };
+
+  const handleRegister = () => {
+
+    console.log(email, password);
+    createUser(email, password)
+        .then((res) => {
+            console.log(res);
+            }
+        )
+        .catch((err) => {
+            console.log(err);
+        }
+    );
+
+
   };
 
   return (
@@ -106,6 +124,7 @@ const Registration = () => {
           color="primary"
           variant="contained"
           style={btnStyle}
+          onClick={handleRegister}
           fullWidth
         >
           register

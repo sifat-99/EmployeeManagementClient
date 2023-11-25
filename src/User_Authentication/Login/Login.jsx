@@ -8,8 +8,11 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../Components/Provider/AuthProvider";
+import { GoogleAuthProvider } from "firebase/auth";
+import GoogleIcon from "@mui/icons-material/Google";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -41,6 +44,25 @@ const Login = () => {
     console.log(e.target.value);
     setPassword(e.target.value);
     // console.log(e.target.email.value)
+  };
+
+  const { signIn, signInWithGoogle } = useContext(AuthContext);
+  const provider = new GoogleAuthProvider();
+
+  const handleSignIn = () => {
+    signIn(email, password)
+      .then((result) => {
+        console.log(result.user);
+      })
+      .catch((error) => console.log(error.message));
+  };
+
+  const handleSignInWithGoogle = () => {
+    signInWithGoogle(provider)
+      .then((result) => {
+        console.log(result.user);
+      })
+      .catch((error) => console.log(error.message));
   };
 
   return (
@@ -77,6 +99,7 @@ const Login = () => {
           color="primary"
           variant="contained"
           style={btnStyle}
+          onClick={handleSignIn}
           fullWidth
         >
           Sign in
@@ -86,8 +109,14 @@ const Login = () => {
           sx={{ display: "flex", gap: 1, alignItems: "center", mt: 2 }}
         >
           {" "}
-          Don&apos;t have an account?<Link to={'/registration'}><Button >Sign Up</Button></Link>
+          Don&apos;t have an account?
+          <Link to={"/registration"}>
+            <Button>Sign Up</Button>
+          </Link>
         </Typography>
+        <Button onClick={handleSignInWithGoogle}>
+          <GoogleIcon sx={{ mt: 2, fontSize: 50 }}></GoogleIcon>
+        </Button>
       </Paper>
     </Grid>
   );

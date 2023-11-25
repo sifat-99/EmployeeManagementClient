@@ -13,6 +13,8 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import CssBaseline from "@mui/material/CssBaseline";
+import { AuthContext } from "../../Provider/AuthProvider";
+import { Link } from "react-router-dom";
 
 const pages = ["Home", "Profile", "Login"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -20,6 +22,9 @@ const settings = ["Profile", "Account", "Dashboard", "Logout"];
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+
+  const { user, logOut } = React.useContext(AuthContext);
+  console.log(user);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -34,6 +39,14 @@ function ResponsiveAppBar() {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const handleLogOut = () => {
+    logOut()
+      .then((result) => {
+        console.log(result.user);
+      })
+      .catch((error) => console.log(error.message));
   };
 
   return (
@@ -137,19 +150,29 @@ function ResponsiveAppBar() {
                 gap: 2,
               }}
             >
-              <Typography
-                sx={{
-                  mr: 2,
-                  display: { xs: "none", md: "flex" },
-                }}
-              >
-                User name
-              </Typography>
-              <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="User Photo" src="/static/images/avatar/2.jpg" />
-                </IconButton>
-              </Tooltip>
+              {user ? (
+                <Typography sx={{ display: { xs: "none", md: "flex" } }}>
+                  {user.displayName}
+                </Typography>
+              ) : (
+                <Link to={"/registration"}>
+                  <Button variant="contained">Registration</Button>
+                </Link>
+              )}
+              {user ? (
+                <Tooltip title="Open settings">
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <Avatar
+                      alt="User Photo"
+                      src="/static/images/avatar/2.jpg"
+                    />
+                  </IconButton>
+                </Tooltip>
+              ) : (
+                <Link to={"/login"}>
+                  <Button variant="contained">Login</Button>
+                </Link>
+              )}
 
               <Menu
                 sx={{ mt: "45px" }}
@@ -169,15 +192,12 @@ function ResponsiveAppBar() {
               >
                 {settings.map((setting) => (
                   <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Button fullWidth href={setting.toLowerCase()}>
-                      {setting}
-                    </Button>
-                    {setting === "Logout" && (
-                      <Avatar
-                        alt="Remy Sharp"
-                        src="/static/images/avatar/2.jpg"
-                        sx={{ ml: 2 }}
-                      />
+                    {setting === "Logout" ? (
+                      <Button onClick={handleLogOut}>Logout</Button>
+                    ) : (
+                      <Button fullWidth href={setting.toLowerCase()}>
+                        {setting}
+                      </Button>
                     )}
                   </MenuItem>
                 ))}
