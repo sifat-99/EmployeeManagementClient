@@ -1,9 +1,11 @@
 import { Box } from "@mui/material";
+import Banner from "../../Components/SharedComponents/Banner/Banner";
+
 
 const Home = () => {
     return (
        <Box >
-              <h1>Home</h1>
+              <Banner></Banner>
 
     
        </Box>

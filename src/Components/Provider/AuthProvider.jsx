@@ -13,23 +13,23 @@ export const AuthContext = createContext(null);
 const auth = getAuth(app);
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  // const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   const createUser = (email, password) => {
-    // setLoading(true);
+    setLoading(true);
     return createUserWithEmailAndPassword(auth, email, password);
   };
   const logOut = () => {
-    // setLoading(true);
+    setLoading(true);
     return signOut(auth);
   };
 
   const signIn = (email, password) => {
-    // setLoading(true);
+    setLoading(true);
     return signInWithEmailAndPassword(auth, email, password);
   };
   const signInWithGoogle = (provider) => {
-    // setLoading(true);
+    setLoading(true);
     return signInWithPopup(auth, provider);
   };
 
@@ -37,7 +37,7 @@ const AuthProvider = ({ children }) => {
   
     const unSubscribe = auth.onAuthStateChanged((currentUser) => {
       setUser(currentUser);
-      // setLoading(false);
+      setLoading(false);
     });
     return () => {
       unSubscribe();
@@ -47,7 +47,7 @@ const AuthProvider = ({ children }) => {
 
   const AuthInfo = {
     user,
-    // loading,
+    loading,
     createUser,
     logOut,
     signIn,
