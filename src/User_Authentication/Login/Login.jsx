@@ -8,20 +8,22 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../Components/Provider/AuthProvider";
 import { GoogleAuthProvider } from "firebase/auth";
 import GoogleIcon from "@mui/icons-material/Google";
+import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from 'react-simple-captcha';
 const Login = () => {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState("asfasf");
+  const captchaRef = useRef("");
 
-  const userEmailPassword = {
-    email: email,
-    password: password,
-  };
-  console.log(userEmailPassword);
+//   const userEmailPassword = {
+//     email: email,
+//     password: password,
+//   };
+//   console.log(userEmailPassword);
 
   const paperStyle = {
     padding: { xs: 2, md: 6, lg: 10 },
@@ -35,13 +37,13 @@ const Login = () => {
 
   const handleLoginEmail = (e) => {
     e.preventDefault();
-    console.log(e.target.value);
+    // console.log(e.target.value);
     setEmail(e.target.value);
     // console.log(e.target.password.value)
   };
   const handleLoginPassword = (e) => {
     e.preventDefault();
-    console.log(e.target.value);
+    // console.log(e.target.value);
     setPassword(e.target.value);
     // console.log(e.target.email.value)
   };
@@ -64,6 +66,28 @@ const Login = () => {
       })
       .catch((error) => console.log(error.message));
   };
+
+    useEffect(() => {
+        loadCaptchaEnginge(6);
+      }
+        , []);
+const [disable, setDisable] = useState(true)
+
+
+    const handleValidateCaptcha = () => {
+         captchaRef.current.focus();
+       const value =captchaRef.current.value;
+    //    console.log(value)
+
+       if (validateCaptcha(value)===true) {
+            setDisable(false);
+
+        }
+        else
+        {
+            setDisable(true);
+        }
+    }
 
   return (
     <Grid>
@@ -94,11 +118,38 @@ const Login = () => {
           control={<Checkbox name="checkedB" color="primary" />}
           label="Remember me"
         />
+
+        <div>
+        <LoadCanvasTemplate />
+        </div>
+
+        <TextField
+        //   onChange={handleValidateCaptcha}
+          name="Captcha"
+          label="Captcha"
+          placeholder="Enter Captcha"
+          type="text"
+          inputRef={captchaRef}
+          fullWidth
+        //   required
+        />
+        <Button 
+        type="submit"
+          color="primary"
+          variant="contained"
+          style={btnStyle}
+          
+          onClick={handleValidateCaptcha}
+          >
+        Validate
+        </Button>
+
         <Button
           type="submit"
           color="primary"
           variant="contained"
           style={btnStyle}
+          disabled={disable}
           onClick={handleSignIn}
           fullWidth
         >

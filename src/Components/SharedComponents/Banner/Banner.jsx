@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MobileStepper from "@mui/material/MobileStepper";
@@ -9,37 +8,22 @@ import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import SwipeableViews from "react-swipeable-views";
 import { autoPlay } from "react-swipeable-views-utils";
+import { useEffect, useState } from "react";
 import { Container } from "@mui/material";
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
-const images = [
-  {
-    label: "San Francisco – Oakland Bay Bridge, United States",
-    imgPath:
-      "https://images.unsplash.com/photo-1537944434965-cf4679d1a598?auto=format&fit=crop&w=400&h=250&q=60",
-  },
-  {
-    label: "Bird",
-    imgPath:
-      "https://images.unsplash.com/photo-1538032746644-0212e812a9e7?auto=format&fit=crop&w=400&h=250&q=60",
-  },
-  {
-    label: "Bali, Indonesia",
-    imgPath:
-      "https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=400&h=250",
-  },
-  {
-    label: "Goč, Serbia",
-    imgPath:
-      "https://images.unsplash.com/photo-1512341689857-198e7e2f3ca8?auto=format&fit=crop&w=400&h=250&q=60",
-  },
-];
-
 function Banner() {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    fetch("ImageBanner.json")
+      .then((res) => res.json())
+      .then((data) => setData(data));
+  }, []);
   const theme = useTheme();
-  const [activeStep, setActiveStep] = React.useState(0);
-  const maxSteps = images.length;
+  const [activeStep, setActiveStep] = useState(0);
+  const maxSteps = data.length;
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -52,6 +36,11 @@ function Banner() {
   const handleStepChange = (step) => {
     setActiveStep(step);
   };
+
+  // Check if data is empty or activeStep is out of bounds
+  if (maxSteps === 0 || activeStep < 0 || activeStep >= maxSteps) {
+    return null; // or handle this case appropriately
+  }
 
   return (
     <Box sx={{ maxWidth: "100vh", flexGrow: 1, px: 2 }}>
@@ -66,17 +55,19 @@ function Banner() {
           bgcolor: "background.default",
         }}
       >
-        <Typography>{images[activeStep].label}</Typography>
+        {/* Check if data[activeStep] exists before accessing its properties */}
+        <Typography>{data[activeStep]?.label}</Typography>
       </Paper>
+
       <AutoPlaySwipeableViews
         axis={theme.direction === "rtl" ? "x-reverse" : "x"}
         index={activeStep}
         onChangeIndex={handleStepChange}
         enableMouseEvents
       >
-        {images.map((step, index) => (
+        {data.map((step, index) => (
           <div key={step.label}>
-            {Math.abs(activeStep - index) <= 2 ? (
+            {Math.abs(activeStep - index) <= 2 && (
               <Container
                 sx={{
                   height: "50vh",
@@ -90,7 +81,7 @@ function Banner() {
                   sx={{
                     backgroundImage: `url(${step.imgPath})`,
                     height: "100%",
-                    opacity: 1, // Set the opacity for the background image
+                    opacity: 1,
                   }}
                 >
                   <Container
@@ -100,23 +91,33 @@ function Banner() {
                       alignItems: "center",
                       backgroundImage: `url(${step.imgPath})`,
                       backgroundRepeat: "no-repeat",
-                      backgroundSize:'cover',
+                      backgroundSize: "cover",
                       backgroundColor: "black",
-                      opacity: 1, // Set opacity to 1 for full visibility of text
+                      opacity: 1,
                       height: "100%",
                       color: "white",
-                      textShadow: "2px 2px 4px rgba(0, 0, 0, 0.8)", // Adding a shadow
+                      textShadow: "2px 2px 4px rgba(0, 0, 0, 0.8)",
                     }}
                   >
-                    <Typography sx={{background:'black', fontSize:32, fontWeight:600, p:4}}>{step.label}</Typography>
+                    {/* You can render additional components here */}
+                    {/* <Typography
+                      sx={{
+                        background: "black",
+                        fontSize: 32,
+                        fontWeight: 600,
+                        p: 4,
+                      }}
+                    >
+                      {step.label}
+                    </Typography> */}
                   </Container>
                 </Box>
-
               </Container>
-            ) : null}
+            )}
           </div>
         ))}
       </AutoPlaySwipeableViews>
+
       <MobileStepper
         steps={maxSteps}
         position="static"
@@ -149,5 +150,7 @@ function Banner() {
     </Box>
   );
 }
+
+// ...
 
 export default Banner;

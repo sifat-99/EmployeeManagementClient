@@ -40,7 +40,7 @@ function ResponsiveDrawer(props) {
               <ListItemIcon>
                 {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
               </ListItemIcon>
-              <ListItemText sx={{display:{xs: "none", md:'block'}}} primary={text} />
+              <ListItemText sx={{display:{xs: "none", lg:'block'}}} primary={text} />
             </ListItemButton>
           </ListItem>
         ))}
@@ -53,7 +53,7 @@ function ResponsiveDrawer(props) {
               <ListItemIcon>
                 {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
               </ListItemIcon>
-              <ListItemText sx={{display:{xs: "none", md:'block'}}} primary={text} />
+              <ListItemText sx={{display:{xs: "none", lg:'block'}}} primary={text} />
             </ListItemButton>
           </ListItem>
         ))}
@@ -66,7 +66,7 @@ function ResponsiveDrawer(props) {
     window !== undefined ? () => window().document.body : undefined;
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "flex"}}>
       <CssBaseline />
       <AppBar
         position="fixed"
@@ -88,8 +88,7 @@ function ResponsiveDrawer(props) {
       </AppBar>
       <Box
         component="nav"
-        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
-        aria-label="mailbox folders"
+        sx={{mb:'64px', width: { sm: drawerWidth }, flexShrink: { sm: 1 } }}
       >
         {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Drawer
@@ -102,11 +101,6 @@ function ResponsiveDrawer(props) {
           }}
           sx={{
             display: { xs: "block" },
-            "& .MuiDrawer-paper": {
-              boxSizing: "border-box",
-              width: drawerWidth,
-              height: "50vh",
-            },
           }}
         >
           {drawer}
@@ -115,11 +109,6 @@ function ResponsiveDrawer(props) {
           variant="permanent"
           sx={{
             display: {  sm: "block" },
-            "& .MuiDrawer-paper": {
-              boxSizing: "border-box",
-              width: drawerWidth,
-              height: "50vh",
-            },
           }}
           open
         >
@@ -133,6 +122,7 @@ function ResponsiveDrawer(props) {
           p: 3,
           ml: {xs:`64px`,md:'150px'},
           width: { sm: `calc(100% - ${drawerWidth}px)` },
+          backgroundColor:"white"
         }}
       >
         <Toolbar />

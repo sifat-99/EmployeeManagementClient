@@ -53,7 +53,7 @@ function ResponsiveAppBar() {
       <CssBaseline />
       <AppBar
         component="nav"
-        sx={{ borderRadius: "12px", backgroundColor: "Transparent" }}
+        sx={{ borderRadius: "12px", backgroundColor: "White" }}
       >
         <Container maxWidth="lg">
           <Toolbar disableGutters>
