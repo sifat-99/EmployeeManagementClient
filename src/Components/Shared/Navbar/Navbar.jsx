@@ -122,7 +122,7 @@ function ResponsiveAppBar() {
                     onClick={handleCloseNavMenu}
                   >
                     {page === "Dashboard" && user ? (
-                      <Link to={`/${page.toLowerCase()}` }>
+                      <Link to={`/${page.toLowerCase()}/home` }>
                         <Button>{page}</Button>
                       </Link>
                     ) : (
@@ -177,7 +177,7 @@ function ResponsiveAppBar() {
                   onClick={handleCloseNavMenu}
                 >
                   {page === "Dashboard" && user ? (
-                    <Link to={`/${page.toLowerCase()}`}>
+                    <Link to={`/${page.toLowerCase()}/home`}>
                       <Button>{page}</Button>
                     </Link>
                   ) : (

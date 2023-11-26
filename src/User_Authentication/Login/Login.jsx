@@ -124,14 +124,13 @@ const [disable, setDisable] = useState(true)
         </div>
 
         <TextField
-        //   onChange={handleValidateCaptcha}
+        sx={{ mt: 2 }}
           name="Captcha"
           label="Captcha"
           placeholder="Enter Captcha"
           type="text"
           inputRef={captchaRef}
           fullWidth
-        //   required
         />
         <Button 
         type="submit"
