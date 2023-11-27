@@ -6,6 +6,7 @@ import Registration from "../User_Authentication/Registration/Registration";
 import PrivateRoute from "../Components/PrivateRoutes/PrivateRoute";
 import Page from "../Pages/ErrorPage/Error";
 import Dashboard from "../Pages/UserDashboard/Dashboard";
+import AdminPage from "../Pages/UserDashboard/AdminPages/AdminPage";
 
 
 export const Router = createBrowserRouter([
@@ -42,7 +43,7 @@ export const Router = createBrowserRouter([
         children:[
             {
                 path: 'home',
-                element:<h1>Home</h1>
+                element:<AdminPage></AdminPage>
             },
             {
                 path: 'profile',

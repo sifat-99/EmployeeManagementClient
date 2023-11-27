@@ -43,7 +43,7 @@ function Banner() {
   }
 
   return (
-    <Box sx={{ maxWidth: "100vh", flexGrow: 1, px: 2 }}>
+    <Box sx={{ maxWidth: "100vw", flexGrow: 1, px: 2 }}>
       <Paper
         square
         elevation={0}
