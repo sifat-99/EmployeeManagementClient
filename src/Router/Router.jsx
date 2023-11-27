@@ -7,6 +7,7 @@ import PrivateRoute from "../Components/PrivateRoutes/PrivateRoute";
 import Page from "../Pages/ErrorPage/Error";
 import Dashboard from "../Pages/UserDashboard/Dashboard";
 import AdminPage from "../Pages/UserDashboard/AdminPages/AdminPage";
+import HrPage from "../Pages/UserDashboard/HRpage/HRPage";
 
 
 export const Router = createBrowserRouter([
@@ -47,7 +48,7 @@ export const Router = createBrowserRouter([
             },
             {
                 path: 'profile',
-                element:<h1>Profile</h1>
+                element:<HrPage></HrPage>
             },
             {
                 path: 'payment history',

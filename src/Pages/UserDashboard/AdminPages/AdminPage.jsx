@@ -133,14 +133,14 @@ export default function AdminPage() {
             <TableCell>Id</TableCell>
             <TableCell>Name</TableCell>
             <TableCell>Designation</TableCell>
-            <TableCell style={{ width: 160 }} align="center">
+            <TableCell style={{ width: 160 }} align="left">
               Email
             </TableCell>
             <TableCell style={{ width: 160 }} align="center">
-              Salary
+              {"   "}
             </TableCell>
 
-            <TableCell style={{ width: 160 }} align="center">
+            <TableCell style={{ width: 160 }} align="left">
               Action
             </TableCell>
           </TableRow>
@@ -156,19 +156,27 @@ export default function AdminPage() {
               </TableCell>
               <TableCell align="left">{row.firstName}</TableCell>
               <TableCell align="left">{row.firstName}</TableCell>
-              <TableCell style={{ width: "auto" }} align="center">
+              <TableCell style={{ width: "auto" }} align="left">
                 {row.email}
               </TableCell>
-              <TableCell style={{ width: "auto" }} align="center">
-                {row.age}
+              
+              <TableCell>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  sx={{textTransform: 'none', fontWeight:700}}
+                >
+                  Make HR
+                </Button>
               </TableCell>
               <TableCell>
                 <Button
                   variant="contained"
                   color="primary"
                   onClick={() => handleButtonClick(row)}
+                  sx={{textTransform: 'none', fontWeight:700}}
                 >
-                  Action
+                  Fire
                 </Button>
               </TableCell>
             </TableRow>

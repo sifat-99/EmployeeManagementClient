@@ -14,6 +14,7 @@ import MenuItem from "@mui/material/MenuItem";
 import CssBaseline from "@mui/material/CssBaseline";
 import { AuthContext } from "../../Provider/AuthProvider";
 import { Link } from "react-router-dom";
+import { ListItemButton, ListItemText } from "@mui/material";
 
 const pages = ["Home", "Profile", "Dashboard","Contact Us"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -138,7 +139,6 @@ function ResponsiveAppBar() {
               src="/K.png"
               sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
             ></Avatar>
-            {/* <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} /> */}
             <Typography
               variant="h5"
               noWrap
@@ -157,33 +157,27 @@ function ResponsiveAppBar() {
             >
               KUBAR
             </Typography>
-            {/* <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-              {pages.map((page) => (
-                <Button
-                  href={`/${page.toLowerCase()}`}
-                  key={page}
-                  onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: "black", display: "block",fontWeight:600 }}
-                >
-                  {page}
-                </Button>
-              ))}
-            </Box> */}
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
               {pages.map((page) => (
                 <MenuItem
                   key={page}
-                  sx={{ color: "black", fontWeight: 600 }}
+                  sx={{ color: "black", fontWeight: 700 }}
                   onClick={handleCloseNavMenu}
                 >
-                  {page === "Dashboard" && user ? (
-                    <Link to={`/${page.toLowerCase()}/home`}>
-                      <Button>{page}</Button>
-                    </Link>
+                  {page === "Dashboard" ? (
+                    <ListItemButton to={`/${page.toLowerCase()}/home`}>
+                      <ListItemText
+                      primary={page}
+                      sx={{ opacity: open ? 1 : 0, fontWeight: 700  }}
+                    />
+                    </ListItemButton>
                   ) : (
-                    <Link to={`/${page.toLowerCase()}`}>
-                      <Button>{page}</Button>
-                    </Link>
+                    <ListItemButton to={`/${page.toLowerCase()}`}>
+                      <ListItemText
+                      primary={page}
+                      sx={{ opacity: open ? 1 : 0, fontWeight: 700 }}
+                    />
+                    </ListItemButton>
                   )}
                 </MenuItem>
               ))}

@@ -9,21 +9,18 @@ import {
   Typography,
 } from "@mui/material";
 import { useContext, useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, redirect, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../Components/Provider/AuthProvider";
 import { GoogleAuthProvider } from "firebase/auth";
 import GoogleIcon from "@mui/icons-material/Google";
 import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from 'react-simple-captcha';
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("asfasf");
   const captchaRef = useRef("");
-
-//   const userEmailPassword = {
-//     email: email,
-//     password: password,
-//   };
-//   console.log(userEmailPassword);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const paperStyle = {
     padding: { xs: 2, md: 6, lg: 10 },
@@ -31,6 +28,7 @@ const Login = () => {
     height: "70vh",
     borderRadius: "12px",
     boxShadow: "0 0 10px 0 #000",
+    mb:'64px'
   };
   const avatarStyle = { backgroundColor: "#1bbd7e" };
   const btnStyle = { margin: "8px 0" };
@@ -55,16 +53,23 @@ const Login = () => {
     signIn(email, password)
       .then((result) => {
         console.log(result.user);
+        navigate(location ? location?.state : "/");
+        redirect("/");
+        
       })
       .catch((error) => console.log(error.message));
+
   };
 
   const handleSignInWithGoogle = () => {
     signInWithGoogle(provider)
       .then((result) => {
         console.log(result.user);
+        navigate(location ? location?.state : "/");
+        redirect("/");
       })
       .catch((error) => console.log(error.message));
+
   };
 
     useEffect(() => {
