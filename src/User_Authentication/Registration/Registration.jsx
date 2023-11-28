@@ -1,7 +1,9 @@
 import {
   Avatar,
+  Box,
   Button,
   Grid,
+  Input,
   Paper,
   TextField,
   Typography,
@@ -9,18 +11,14 @@ import {
 import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../Components/Provider/AuthProvider";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+
 const Registration = () => {
   const [valid, setValid] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const {createUser} = useContext(AuthContext);
-
-//   const userEmailPassword = {
-//     email: email,
-//     password: password,
-//   };
-//   console.log(userEmailPassword);
-
+  const [name, setName] = useState("");
+  const { createUser } = useContext(AuthContext);
   const paperStyle = {
     padding: { xs: 2, md: 6, lg: 10 },
     margin: "30px auto",
@@ -30,17 +28,27 @@ const Registration = () => {
   };
   const avatarStyle = { backgroundColor: "#1bbd7e" };
   const btnStyle = { margin: "8px 0" };
+  const PrimaryButton = {
+    ml: "8px",
+    fontWeight: "bold",
+    borderRadius: "12px",
+    "&:hover": {
+      backgroundColor: "#39A7FF",
+      color: "black",
+      fontWeight: "bold",
+    },
+  }
+
+
   const handleRegistrationName = (e) => {
     e.preventDefault();
-    console.log(e.target.value);
-    // console.log(e.target.password.value)
+    setName(e.target.value);
+    console.log(name)
   };
 
   const handleRegistrationEmail = (e) => {
     e.preventDefault();
-    console.log(e.target.value);
     setEmail(e.target.value);
-    // console.log(e.target.password.value)
   };
   const handleRegistrationPassword = (e) => {
     e.preventDefault();
@@ -68,20 +76,33 @@ const Registration = () => {
     setPassword(password);
   };
 
-  const handleRegister = () => {
+  const [error, setError] = useState("");
 
+  const handleRegister = () => {
     console.log(email, password);
     createUser(email, password)
-        .then((res) => {
-            console.log(res);
-            }
-        )
-        .catch((err) => {
-            console.log(err);
-        }
-    );
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+        setError(err.message);
+      });
+  };
+
+  const [selectedFile, setSelectedFile] = useState(null);
 
 
+
+  const handleFileChange = (event) => {
+    console.log(event.target.files[0]);
+    setSelectedFile(event.target.files[0]);
+  };
+
+  const handleUpload = () => {
+
+    console.log('dklajhdlfah')
+    console.log(selectedFile)
   };
 
   return (
@@ -89,7 +110,7 @@ const Registration = () => {
       <Paper elevation={10} sx={paperStyle}>
         <Grid align="center">
           <Avatar style={avatarStyle}></Avatar>
-          <h2>Sign Up</h2>
+          <h1>User Registration</h1>
         </Grid>
         <TextField
           onChange={handleRegistrationName}
@@ -100,6 +121,24 @@ const Registration = () => {
           fullWidth
           required
         />
+
+        <Box
+          sx={{ display: "flex", alignItems: "center" }}
+          style={{ marginBottom: "20px" }}
+        >
+          <div>
+            <Input type="file" onChange={handleFileChange} />
+            <Button
+              onClick={handleUpload}
+              color="primary"
+              variant="outlined"
+              sx={PrimaryButton}
+            >
+              <CloudUploadIcon sx={{ mr: "6px" }} />
+              Upload
+            </Button>
+          </div>
+        </Box>
         <TextField
           onChange={handleRegistrationEmail}
           name="email"
@@ -118,12 +157,14 @@ const Registration = () => {
           fullWidth
           required
         />
-        <Typography sx={{ color: "red", mt:2 }}>{valid}</Typography>
+
+        <Typography sx={{ color: "red", mt: 2 }}>{valid}{error}</Typography>
         <Button
           type="submit"
-          color="primary"
-          variant="contained"
+          // color="primary"
+          variant="outlined"
           style={btnStyle}
+          sx={PrimaryButton}
           onClick={handleRegister}
           fullWidth
         >

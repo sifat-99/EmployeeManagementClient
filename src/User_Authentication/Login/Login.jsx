@@ -21,6 +21,7 @@ const Login = () => {
   const captchaRef = useRef("");
   const location = useLocation();
   const navigate = useNavigate();
+  const [error, setError] = useState("");
 
   const paperStyle = {
     padding: { xs: 2, md: 6, lg: 10 },
@@ -46,7 +47,7 @@ const Login = () => {
     // console.log(e.target.email.value)
   };
 
-  const { signIn, signInWithGoogle } = useContext(AuthContext);
+  const { signIn,signInWithGoogle } = useContext(AuthContext);
   const provider = new GoogleAuthProvider();
 
   const handleSignIn = () => {
@@ -57,7 +58,10 @@ const Login = () => {
         redirect("/");
         
       })
-      .catch((error) => console.log(error.message));
+      .catch((error) => {
+        // console.log(error);
+        setError(error.message);
+      });
 
   };
 
@@ -123,6 +127,8 @@ const [disable, setDisable] = useState(true)
           control={<Checkbox name="checkedB" color="primary" />}
           label="Remember me"
         />
+
+        <Typography sx={{ color: "red", mt: 2 }}>{error}</Typography>
 
         <div>
         <LoadCanvasTemplate />
