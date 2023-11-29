@@ -8,28 +8,34 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useContext, useEffect, useRef, useState } from "react";
+import {  useEffect, useRef, useState } from "react";
 import { Link, redirect, useLocation, useNavigate } from "react-router-dom";
-import { AuthContext } from "../../Components/Provider/AuthProvider";
 import { GoogleAuthProvider } from "firebase/auth";
 import GoogleIcon from "@mui/icons-material/Google";
-import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from 'react-simple-captcha';
+import {
+  loadCaptchaEnginge,
+  LoadCanvasTemplate,
+  validateCaptcha,
+} from "react-simple-captcha";
+import useAxiosPublic from "../../Components/hooks/useAxiosPublic";
+import useAuth from "../../Components/hooks/useAuth";
 
 const Login = () => {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("asfasf");
+  const [password, setPassword] = useState(" ");
   const captchaRef = useRef("");
   const location = useLocation();
   const navigate = useNavigate();
   const [error, setError] = useState("");
+  const axiosPublic = useAxiosPublic();
 
   const paperStyle = {
     padding: { xs: 2, md: 6, lg: 10 },
     margin: "30px auto",
-    height: "70vh",
+    height: "800px",
     borderRadius: "12px",
     boxShadow: "0 0 10px 0 #000",
-    mb:'64px'
+    mb: "64px",
   };
   const avatarStyle = { backgroundColor: "#1bbd7e" };
   const btnStyle = { margin: "8px 0" };
@@ -47,7 +53,7 @@ const Login = () => {
     // console.log(e.target.email.value)
   };
 
-  const { signIn,signInWithGoogle } = useContext(AuthContext);
+  const { signIn, signInWithGoogle } = useAuth()
   const provider = new GoogleAuthProvider();
 
   const handleSignIn = () => {
@@ -56,47 +62,58 @@ const Login = () => {
         console.log(result.user);
         navigate(location ? location?.state : "/");
         redirect("/");
-        
       })
       .catch((error) => {
         // console.log(error);
         setError(error.message);
       });
-
   };
 
   const handleSignInWithGoogle = () => {
     signInWithGoogle(provider)
       .then((result) => {
-        console.log(result.user);
+        handleSetUserToDB(result.user);
+
+        // console.log(result.user);
         navigate(location ? location?.state : "/");
         redirect("/");
       })
       .catch((error) => console.log(error.message));
-
   };
 
-    useEffect(() => {
-        loadCaptchaEnginge(6);
-      }
-        , []);
-const [disable, setDisable] = useState(true)
+  const handleSetUserToDB = (user) => {
+    // console.log("handleSetUserToDB");
+    console.log(user);
 
+    const { uid, email, displayName, photoURL } = user;
+    axiosPublic.post("/employees", {
+      uid: uid,
+      email: email,
+      name: displayName,
+      photoURL: photoURL,
+      role: "user",
+      bankAccountNo: null,
+      salary: null,
+      verificationStatus: false,
+    });
+  };
 
-    const handleValidateCaptcha = () => {
-         captchaRef.current.focus();
-       const value =captchaRef.current.value;
+  useEffect(() => {
+    loadCaptchaEnginge(6);
+  }, []);
+  const [disable, setDisable] = useState(true);
+
+  const handleValidateCaptcha = () => {
+    captchaRef.current.focus();
+    const value = captchaRef.current.value;
     //    console.log(value)
 
-       if (validateCaptcha(value)===true) {
-            setDisable(false);
-
-        }
-        else
-        {
-            setDisable(true);
-        }
+    if (validateCaptcha(value) === true) {
+      setDisable(false);
+    } else {
+      setDisable(true);
     }
+  };
 
   return (
     <Grid>
@@ -131,11 +148,11 @@ const [disable, setDisable] = useState(true)
         <Typography sx={{ color: "red", mt: 2 }}>{error}</Typography>
 
         <div>
-        <LoadCanvasTemplate />
+          <LoadCanvasTemplate />
         </div>
 
         <TextField
-        sx={{ mt: 2 }}
+          sx={{ mt: 2 }}
           name="Captcha"
           label="Captcha"
           placeholder="Enter Captcha"
@@ -143,15 +160,14 @@ const [disable, setDisable] = useState(true)
           inputRef={captchaRef}
           fullWidth
         />
-        <Button 
-        type="submit"
+        <Button
+          type="submit"
           color="primary"
           variant="contained"
           style={btnStyle}
-          
           onClick={handleValidateCaptcha}
-          >
-        Validate
+        >
+          Validate
         </Button>
 
         <Button

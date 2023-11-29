@@ -11,7 +11,6 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 
-
 export default function WhatWeDo() {
   const [data, setData] = useState([]);
 
@@ -21,32 +20,50 @@ export default function WhatWeDo() {
       .then((data) => setData(data));
   }, []);
   return (
-    <Box sx={{ flexGrow: 1, mb: 6, mt: 6, display:'flex',mx:'auti', alignItems:'center' }}>
+    <Box
+      sx={{
+        flexGrow: 1,
+        mb: 6,
+        mt: 6,
+        display: "flex",
+        mx: "auto",
+        alignItems: "center",
+      }}
+    >
       <Grid container spacing={2}>
-       {
-            data.map((item) => (
-                <Grid key={item.id} sx={{display:'flex',alignItems:'center', justifyContent:'center'}} item xs={12} md={6} lg={4}>
-                    <Card sx={{ maxWidth: 345 }}>
-                    <CardActionArea>
-                        <CardMedia
-                        component="img"
-                        height="140"
-                        image={item.picture}
-                        alt="green iguana"
-                        />
-                        <CardContent>
-                        <Typography gutterBottom variant="h5" component="div">
-                            {item.name}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                            {item.description}
-                        </Typography>
-                        </CardContent>
-                    </CardActionArea>
-                    </Card>
-                </Grid>
-                ))
-       }
+        {data.map((item) => (
+          <Grid
+            key={item.id}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+            item
+            xs={12}
+            md={6}
+            lg={4}
+          >
+            <Card sx={{ maxWidth: 345 }}>
+              <CardActionArea>
+                <CardMedia
+                  component="img"
+                  height="140"
+                  image={item.picture}
+                  alt={item.name}
+                />
+                <CardContent>
+                  <Typography gutterBottom variant="h5" component="div">
+                    {item.name}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {item.description}
+                  </Typography>
+                </CardContent>
+              </CardActionArea>
+            </Card>
+          </Grid>
+        ))}
       </Grid>
     </Box>
   );

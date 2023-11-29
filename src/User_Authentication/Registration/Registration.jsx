@@ -8,21 +8,30 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useContext, useState } from "react";
-import { Link } from "react-router-dom";
-import { AuthContext } from "../../Components/Provider/AuthProvider";
+import {  useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import useAxiosPublic from "../../Components/hooks/useAxiosPublic";
+import useAuth from "../../Components/hooks/useAuth";
+const imgApiKey = import.meta.env.VITE_IMG_API_KEY;
+const imageHostingApi = `https://api.imgbb.com/1/upload?key=${imgApiKey}`;
 
 const Registration = () => {
   const [valid, setValid] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const { createUser } = useContext(AuthContext);
+  const { createUser, logOut,updateUser } = useAuth()
+  const navigate = useNavigate();
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const axiosPublic = useAxiosPublic();
+  
+
   const paperStyle = {
     padding: { xs: 2, md: 6, lg: 10 },
     margin: "30px auto",
-    height: "70vh",
+    height: "700px",
     borderRadius: "12px",
     boxShadow: "0 0 10px 0 #000",
   };
@@ -37,13 +46,12 @@ const Registration = () => {
       color: "black",
       fontWeight: "bold",
     },
-  }
-
+  };
 
   const handleRegistrationName = (e) => {
     e.preventDefault();
     setName(e.target.value);
-    console.log(name)
+    console.log(name);
   };
 
   const handleRegistrationEmail = (e) => {
@@ -83,6 +91,10 @@ const Registration = () => {
     createUser(email, password)
       .then((res) => {
         console.log(res);
+        updateUser(name, selectedFile)
+        handleSetUserToDB(res.user.uid);
+        logOut();
+        navigate("/login");
       })
       .catch((err) => {
         console.log(err);
@@ -90,20 +102,36 @@ const Registration = () => {
       });
   };
 
-  const [selectedFile, setSelectedFile] = useState(null);
-
-
+  const handleSetUserToDB = (uid) => {
+    axiosPublic.post("/employees", {
+      uid: uid,
+      email: email,
+      name: name,
+      photoURL: selectedFile,
+      role: "user",
+      bankAccountNo: null,
+      salary: null,
+      verificationStatus: false,
+    });
+  };
 
   const handleFileChange = (event) => {
     console.log(event.target.files[0]);
-    setSelectedFile(event.target.files[0]);
+    const file = event.target.files[0];
+    const formData = new FormData();
+    formData.append("image", file);
+    fetch(imageHostingApi, {
+      method: "POST",
+      body: formData,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setSelectedFile(data.data.display_url);
+      })
+      .catch((err) => console.log(err));
   };
 
-  const handleUpload = () => {
-
-    console.log('dklajhdlfah')
-    console.log(selectedFile)
-  };
+  console.log(selectedFile);
 
   return (
     <Grid>
@@ -129,13 +157,13 @@ const Registration = () => {
           <div>
             <Input type="file" onChange={handleFileChange} />
             <Button
-              onClick={handleUpload}
               color="primary"
               variant="outlined"
               sx={PrimaryButton}
+              // disabled
             >
               <CloudUploadIcon sx={{ mr: "6px" }} />
-              Upload
+              Upload Image
             </Button>
           </div>
         </Box>
@@ -158,7 +186,10 @@ const Registration = () => {
           required
         />
 
-        <Typography sx={{ color: "red", mt: 2 }}>{valid}{error}</Typography>
+        <Typography sx={{ color: "red", mt: 2 }}>
+          {valid}
+          {error}
+        </Typography>
         <Button
           type="submit"
           // color="primary"

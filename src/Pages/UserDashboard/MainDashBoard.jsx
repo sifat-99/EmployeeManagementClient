@@ -22,6 +22,8 @@ import { Link as NavLink, Outlet } from "react-router-dom";
 import { Button, Container } from "@mui/material";
 import PaidIcon from '@mui/icons-material/Paid';
 import BookOnlineIcon from '@mui/icons-material/BookOnline';
+import useAxiosPublic from "../../Components/hooks/useAxiosPublic";
+import { AuthContext } from "../../Components/Provider/AuthProvider";
 
 const drawerWidth = 240;
 
@@ -91,8 +93,16 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 export default function MainDashboard() {
+
+  const {user} = React.useContext(AuthContext);
+
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+
+  const [role, setRole] = React.useState('');
+  const axiosPublic = useAxiosPublic();
+
+  const [navItems, setNavItems] = React.useState([]);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -101,27 +111,84 @@ export default function MainDashboard() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+  React.useEffect(()=>{
+    axiosPublic.get(`/employees/${user.email}`)
+    .then(res=>{
 
-  const navItems = [
-      {
-          name:'Home',
-          icon: <AddHomeIcon />,
-      },
-      {
-        name:'Profile',
-        icon: <AccountBoxIcon />,
-      },
-      {
-        name:'Payment History',
-        icon: <PaidIcon />,
-      },
-      {
-        name:'Appointment',
-        icon: <BookOnlineIcon />,
+      const adminItems = [
+        {
+            name:'Admin-Home',
+            icon: <AddHomeIcon />,
+        },
+        {
+          name:'Admin-Profile',
+          icon: <AccountBoxIcon />,
+        },
+        {
+          name:'Payment History',
+          icon: <PaidIcon />,
+        },
+        {
+          name:'Appointment',
+          icon: <BookOnlineIcon />,
+        }
+    
+    ]
+    const HrItems = [
+        {
+            name:'Home',
+            icon: <AddHomeIcon />,
+        },
+        {
+          name:'Profile',
+          icon: <AccountBoxIcon />,
+        },
+        {
+          name:'Payment History',
+          icon: <PaidIcon />,
+        },
+        {
+          name:'Appointment',
+          icon: <BookOnlineIcon />,
+        }
+    
+    ]
+    const userItems = [
+        {
+            name:'User-Home',
+            icon: <AddHomeIcon />,
+        },
+        {
+          name:'Profile',
+          icon: <AccountBoxIcon />,
+        },
+        {
+          name:'Payment History',
+          icon: <PaidIcon />,
+        
+        },
+        {
+          name:'Appointment',
+          icon: <BookOnlineIcon />,
+        }
+    
+    ]
+
+      setRole(res.data.role);
+
+      if(role === 'admin'){
+        setNavItems(adminItems)
       }
+      else if(role === 'hr'){
+        setNavItems(HrItems)
+      }
+      else(role === 'user')
+      {
+        setNavItems(userItems)
+      }
+    })
 
-  ]
-
+  },[ axiosPublic,user.email,role])
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -176,7 +243,7 @@ export default function MainDashboard() {
                       justifyContent: open ? "initial" : "center",
                       px: 2.5,
                     }}
-                    to={`/dashboard/${text.name}`}
+                    to={`/dashboard/${text.name.toLowerCase()}`}
                   >
                     <ListItemIcon
                       sx={{

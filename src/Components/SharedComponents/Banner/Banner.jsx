@@ -10,17 +10,24 @@ import SwipeableViews from "react-swipeable-views";
 import { autoPlay } from "react-swipeable-views-utils";
 import { useEffect, useState } from "react";
 import { Container } from "@mui/material";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
 function Banner() {
   const [data, setData] = useState([]);
 
+  const axiosPublic = useAxiosPublic();
+
   useEffect(() => {
-    fetch("ImageBanner.json")
-      .then((res) => res.json())
-      .then((data) => setData(data));
-  }, []);
+    axiosPublic
+      .get("/BannerImages")
+      .then((res) => {
+        console.log(res);
+        setData(res.data);
+      })
+      .catch((err) => console.log(err));
+  }, [axiosPublic]);
   const theme = useTheme();
   const [activeStep, setActiveStep] = useState(0);
   const maxSteps = data.length;

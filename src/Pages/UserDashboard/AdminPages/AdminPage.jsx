@@ -16,6 +16,7 @@ import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import { Button, TableHead, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
+import useAxiosPublic from "../../../Components/hooks/useAxiosPublic";
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -87,18 +88,25 @@ TablePaginationActions.propTypes = {
 };
 
 export default function AdminPage() {
+
+  const axiosPublic = useAxiosPublic()
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const [data, setData] = useState([]);
 
-  useEffect(() => {
-    fetch("/Employee.json")
-      .then((res) => res.json())
-      .then((data) => setData(data));
-  }, []);
+  console.log(data)
 
-  const rows = data.sort((a, b) => (a.firstName < b.firstName ? -1 : 1));
+  useEffect(() => {
+    axiosPublic.get('/Employees')
+    .then(res => {
+      console.log(res);
+      setData(res.data)
+    })
+    .catch(err => console.log(err))
+  }, [axiosPublic]);
+
+  const rows = data.sort((a, b) => (a.name < b.name ? -1 : 1));
 
   console.log(rows);
 
@@ -150,11 +158,11 @@ export default function AdminPage() {
             ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             : rows
           ).map((row) => (
-            <TableRow key={row.id}>
+            <TableRow key={row._id}>
               <TableCell component="th" scope="row">
-                {row.id}
+                {row._id}
               </TableCell>
-              <TableCell align="left">{row.firstName}</TableCell>
+              <TableCell align="left">{row.name}</TableCell>
               <TableCell align="left">{row.firstName}</TableCell>
               <TableCell style={{ width: "auto" }} align="left">
                 {row.email}

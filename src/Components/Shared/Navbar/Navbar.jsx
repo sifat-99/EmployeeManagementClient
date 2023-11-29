@@ -1,4 +1,3 @@
-import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -12,19 +11,20 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import CssBaseline from "@mui/material/CssBaseline";
-import { AuthContext } from "../../Provider/AuthProvider";
 import { Link } from "react-router-dom";
 import { ListItemButton, ListItemText } from "@mui/material";
+import useAuth from "../../hooks/useAuth";
+import { useEffect, useState } from "react";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
 
-const pages = ["Home", "Profile", "Dashboard","Contact Us"];
+const pages = ["Home", "Profile", "Dashboard", "Contact Us"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function ResponsiveAppBar() {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
-
-  const { user, logOut } = React.useContext(AuthContext);
-  console.log(user);
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
+  const { user, logOut, setLoading } = useAuth();
+  const [dashboardLink, setDashboardLink] = useState(null);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -48,6 +48,38 @@ function ResponsiveAppBar() {
       })
       .catch((error) => console.log(error.message));
   };
+
+  const axiosPublic = useAxiosPublic();
+  const [role, setRole] = useState(null);
+
+  useEffect(() => {
+    if (user) {
+      console.log(user.email);
+      axiosPublic.get(`/employees/${user.email}`).then((res) => {
+        console.log(res.data);
+        setRole(res.data.role);
+
+        if (res.data.role === "admin") {
+          setDashboardLink("Admin-Home");
+        }
+        if (res.data.role === "hr") {
+          setDashboardLink("hr-home");
+        }
+        if (res.data.role === "user") {
+          setDashboardLink("user-home");
+        }
+
+
+
+      });
+    }
+  }, [user, setLoading, axiosPublic]);
+
+  console.log(role);
+
+  console.log(dashboardLink)
+
+
 
   return (
     <Box sx={{ mb: 10 }}>
@@ -123,7 +155,7 @@ function ResponsiveAppBar() {
                     onClick={handleCloseNavMenu}
                   >
                     {page === "Dashboard" && user ? (
-                      <Link to={`/${page.toLowerCase()}/home` }>
+                      <Link to={`/${page.toLowerCase()}/${dashboardLink.toLowerCase()}`}>
                         <Button>{page}</Button>
                       </Link>
                     ) : (
@@ -165,18 +197,18 @@ function ResponsiveAppBar() {
                   onClick={handleCloseNavMenu}
                 >
                   {page === "Dashboard" ? (
-                    <ListItemButton to={`/${page.toLowerCase()}/home`}>
+                    <ListItemButton to={`/${page.toLowerCase()}/${dashboardLink.toLowerCase()}`}>
                       <ListItemText
-                      primary={page}
-                      sx={{ opacity: open ? 1 : 0, fontWeight: 700  }}
-                    />
+                        primary={page}
+                        sx={{ opacity: open ? 1 : 0, fontWeight: 700 }}
+                      />
                     </ListItemButton>
                   ) : (
                     <ListItemButton to={`/${page.toLowerCase()}`}>
                       <ListItemText
-                      primary={page}
-                      sx={{ opacity: open ? 1 : 0, fontWeight: 700 }}
-                    />
+                        primary={page}
+                        sx={{ opacity: open ? 1 : 0, fontWeight: 700 }}
+                      />
                     </ListItemButton>
                   )}
                 </MenuItem>
