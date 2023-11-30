@@ -5,17 +5,23 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useEffect, useState } from 'react';
+import useAxiosPublic from '../../Components/hooks/useAxiosPublic';
 
 export default function Testimonial() {
 
 
     const [data, setData] = useState([]);
 
+    const axiosPublic = useAxiosPublic();
+
     useEffect(() => {
-      fetch("Test.json")
-        .then((res) => res.json())
-        .then((data) => setData(data));
-    }, []);
+        axiosPublic
+            .get("/testimonials")
+            .then((res) => {
+                setData(res.data);
+            })
+            .catch((err) => console.log(err));
+    }, [axiosPublic]);
 
 
 

@@ -16,14 +16,15 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import AccountBoxIcon from '@mui/icons-material/AccountBox';
-import AddHomeIcon from '@mui/icons-material/AddHome';
+import AccountBoxIcon from "@mui/icons-material/AccountBox";
+import AddHomeIcon from "@mui/icons-material/AddHome";
 import { Link as NavLink, Outlet } from "react-router-dom";
 import { Button, Container } from "@mui/material";
-import PaidIcon from '@mui/icons-material/Paid';
-import BookOnlineIcon from '@mui/icons-material/BookOnline';
+import PaidIcon from "@mui/icons-material/Paid";
 import useAxiosPublic from "../../Components/hooks/useAxiosPublic";
 import { AuthContext } from "../../Components/Provider/AuthProvider";
+import CachedIcon from "@mui/icons-material/Cached";
+import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 
 const drawerWidth = 240;
 
@@ -93,13 +94,12 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 export default function MainDashboard() {
-
-  const {user} = React.useContext(AuthContext);
+  const { user } = React.useContext(AuthContext);
 
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
-  const [role, setRole] = React.useState('');
+  const [role, setRole] = React.useState("");
   const axiosPublic = useAxiosPublic();
 
   const [navItems, setNavItems] = React.useState([]);
@@ -111,84 +111,70 @@ export default function MainDashboard() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  React.useEffect(()=>{
-    axiosPublic.get(`/employees/${user.email}`)
-    .then(res=>{
-
+  React.useEffect(() => {
+    axiosPublic.get(`/employees/${user.email}`).then((res) => {
       const adminItems = [
         {
-            name:'Admin-Home',
-            icon: <AddHomeIcon />,
+          name: "Admin-Home",
+          icon: <AddHomeIcon />,
         },
         {
-          name:'Admin-Profile',
+          name: "Admin-Profile",
+          icon: <AccountBoxIcon />,
+        },
+      ];
+      const HrItems = [
+        {
+          name: "HR-Home",
+          icon: <AddHomeIcon />,
+        },
+        {
+          name: "Progress",
+          icon: <CachedIcon />,
+        },
+        {
+          name: "HR-Profile",
           icon: <AccountBoxIcon />,
         },
         {
-          name:'Payment History',
+          name: "HR-Payment History",
           icon: <PaidIcon />,
         },
+      ];
+      const userItems = [
         {
-          name:'Appointment',
-          icon: <BookOnlineIcon />,
-        }
-    
-    ]
-    const HrItems = [
-        {
-            name:'Home',
-            icon: <AddHomeIcon />,
+          name: "User-Home",
+          icon: <AddHomeIcon />,
         },
         {
-          name:'Profile',
+          name: "User-Profile",
           icon: <AccountBoxIcon />,
         },
         {
-          name:'Payment History',
+          name: "User-Payment History",
           icon: <PaidIcon />,
         },
         {
-          name:'Appointment',
-          icon: <BookOnlineIcon />,
-        }
-    
-    ]
-    const userItems = [
-        {
-            name:'User-Home',
-            icon: <AddHomeIcon />,
+          name: "Work Sheet",
+          icon: <FolderOpenIcon />,
         },
-        {
-          name:'Profile',
-          icon: <AccountBoxIcon />,
-        },
-        {
-          name:'Payment History',
-          icon: <PaidIcon />,
-        
-        },
-        {
-          name:'Appointment',
-          icon: <BookOnlineIcon />,
-        }
-    
-    ]
+      ];
 
       setRole(res.data.role);
+      console.log(role)
 
-      if(role === 'admin'){
-        setNavItems(adminItems)
+      if (res.data.role === "admin") {
+        setNavItems(adminItems);
+      } 
+      if (res.data.role === "hr") {
+        setNavItems(HrItems);
       }
-      else if(role === 'hr'){
-        setNavItems(HrItems)
-      }
-      else(role === 'user')
+      else
       {
-        setNavItems(userItems)
+        setNavItems(userItems);
       }
-    })
-
-  },[ axiosPublic,user.email,role])
+    });
+  }, [axiosPublic, user.email, role]);
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -207,16 +193,31 @@ export default function MainDashboard() {
           >
             <MenuIcon />
           </IconButton>
-          <Container sx={{display:'flex',gap:12, alignItems:'center',justifyContent:'space-between'}}>
+          <Container
+            sx={{
+              display: "flex",
+              gap: 12,
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
             <Typography
               variant={open ? "h6" : "h5"}
-              sx={{ fontWeight: {sm:500, md:700}, fontSize: {sm:'1.5rem', md:'2rem' }, display: { xs: "none", sm: "block" } }}
+              sx={{
+                fontWeight: { sm: 500, md: 700 },
+                fontSize: { sm: "1.5rem", md: "2rem" },
+                display: { xs: "none", sm: "block" },
+              }}
               noWrap
               component="div"
             >
               Dashboard
             </Typography>
-            <NavLink to={'/'}><Button variant='contained'  sx={{color:'white'}}>home</Button></NavLink>
+            <NavLink to={"/"}>
+              <Button variant="contained" sx={{ color: "white" }}>
+                home
+              </Button>
+            </NavLink>
           </Container>
         </Toolbar>
       </AppBar>
@@ -232,37 +233,33 @@ export default function MainDashboard() {
         </DrawerHeader>
         <Divider />
         <List>
-          {navItems.map(
-            (text, index) => (
-             
-                <ListItem key={index} disablePadding sx={{ display: "block" }}>
-                  <ListItemButton
-                  component={NavLink}
-                    sx={{
-                      minHeight: 48,
-                      justifyContent: open ? "initial" : "center",
-                      px: 2.5,
-                    }}
-                    to={`/dashboard/${text.name.toLowerCase()}`}
-                  >
-                    <ListItemIcon
-                      sx={{
-                        minWidth: 0,
-                        mr: open ? 3 : "auto",
-                        justifyContent: "center",
-                      }}
-                    >
-                      {text.icon}
-                    </ListItemIcon>
-                    <ListItemText
-                      primary={text.name}
-                      sx={{ opacity: open ? 1 : 0 }}
-                    />
-                  </ListItemButton>
-                </ListItem>
-            
-            )
-          )}
+          {navItems.map((text, index) => (
+            <ListItem key={index} disablePadding sx={{ display: "block" }}>
+              <ListItemButton
+                component={NavLink}
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                }}
+                to={`/dashboard/${text.name.toLowerCase()}`}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  {text.icon}
+                </ListItemIcon>
+                <ListItemText
+                  primary={text.name}
+                  sx={{ opacity: open ? 1 : 0 }}
+                />
+              </ListItemButton>
+            </ListItem>
+          ))}
         </List>
         <Divider />
       </Drawer>

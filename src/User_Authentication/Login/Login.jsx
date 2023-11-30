@@ -64,7 +64,6 @@ const Login = () => {
         redirect("/");
       })
       .catch((error) => {
-        // console.log(error);
         setError(error.message);
       });
   };
@@ -73,8 +72,6 @@ const Login = () => {
     signInWithGoogle(provider)
       .then((result) => {
         handleSetUserToDB(result.user);
-
-        // console.log(result.user);
         navigate(location ? location?.state : "/");
         redirect("/");
       })
@@ -82,8 +79,7 @@ const Login = () => {
   };
 
   const handleSetUserToDB = (user) => {
-    // console.log("handleSetUserToDB");
-    console.log(user);
+    // console.log(user);
 
     const { uid, email, displayName, photoURL } = user;
     axiosPublic.post("/employees", {

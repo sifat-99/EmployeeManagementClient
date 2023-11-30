@@ -18,8 +18,9 @@ import { Button, TableHead, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckIcon from "@mui/icons-material/Check";
-import BasicModal from "./PaymentModal";
 import { Link } from "react-router-dom";
+import useAxiosPublic from "../../../Components/hooks/useAxiosPublic";
+import PaymentPage from "./Payment";
 // import { Link } from "react-router-dom";
 
 function TablePaginationActions(props) {
@@ -97,12 +98,18 @@ export default function HrPage() {
 
   const [data, setData] = useState([]);
   const [verified, setVerified] = useState(false);
+  const axiosPublic = useAxiosPublic()
 
   useEffect(() => {
-    fetch("/Employee.json")
-      .then((res) => res.json())
-      .then((data) => setData(data));
-  }, []);
+    axiosPublic
+      .get("/employees")
+      .then((res) => {
+        const allUsers = res.data.filter (user => user.role === "user")
+        setData(allUsers)
+
+      })
+      .catch((err) => console.log(err));
+  }, [axiosPublic]);
 
   const rows = data.sort((a, b) => (a.firstName < b.firstName ? -1 : 1));
 
@@ -119,10 +126,6 @@ export default function HrPage() {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-
-//   const handleDetails = (row) => {
-//     console.log(row);
-//   };
 
   const handleVerification = (row) => {
     console.log(row);
@@ -194,7 +197,7 @@ export default function HrPage() {
               </TableCell>
               <TableCell>
                 <Button variant="outlined">
-                  <BasicModal client={row}></BasicModal>
+                  <PaymentPage></PaymentPage>
                 </Button>
               </TableCell>
               {/* <TableCell>

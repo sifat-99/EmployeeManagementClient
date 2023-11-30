@@ -1,54 +1,26 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
-import PropTypes from 'prop-types'
+// This example shows you how to set up React Stripe.js and use Elements.
+// Learn how to accept a payment using the official Stripe docs.
+// https://stripe.com/docs/payments/accept-a-payment#web
+
+import {loadStripe} from '@stripe/stripe-js';
+// import { Elements} from '../../src';
+
+import { CheckoutForm } from './ChecoutForm';
+import { Elements } from '@stripe/react-stripe-js';
+const stripePromise = loadStripe(import.meta.env.VITE_PAYMENT_API_KEY);
 
 
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
+
+// Make sure to call `loadStripe` outside of a component’s render to avoid
+// recreating the `Stripe` object on every render.
+// const stripePromise = loadStripe('pk_test_6pRNASCoBOKtIshFeQd4XMUh');
+
+const Payment = () => {
+  return (
+    <Elements stripe={stripePromise}>
+      <CheckoutForm></CheckoutForm>
+    </Elements>
+  );
 };
 
-export default function BasicModal({client}) {
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
-  console.log(client)
-
-  return (
-    <div>
-      <Button sx={{fontSize:'16px', fontWeight:700,}} onClick={handleOpen}>Pay</Button>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Text in a modal
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </Typography>
-        </Box>
-      </Modal>
-    </div>
-  );
-}
-
-BasicModal.propTypes = {
-  client: PropTypes.object.isRequired
-}
-
-
+export default Payment;

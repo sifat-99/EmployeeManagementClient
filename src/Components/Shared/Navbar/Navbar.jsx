@@ -60,7 +60,7 @@ function ResponsiveAppBar() {
         setRole(res.data.role);
 
         if (res.data.role === "admin") {
-          setDashboardLink("Admin-Home");
+          setDashboardLink("admin-home");
         }
         if (res.data.role === "hr") {
           setDashboardLink("hr-home");
@@ -155,7 +155,7 @@ function ResponsiveAppBar() {
                     onClick={handleCloseNavMenu}
                   >
                     {page === "Dashboard" && user ? (
-                      <Link to={`/${page.toLowerCase()}/${dashboardLink.toLowerCase()}`}>
+                      <Link to={`/${page.toLowerCase()}/${dashboardLink}`}>
                         <Button>{page}</Button>
                       </Link>
                     ) : (
@@ -197,7 +197,7 @@ function ResponsiveAppBar() {
                   onClick={handleCloseNavMenu}
                 >
                   {page === "Dashboard" ? (
-                    <ListItemButton to={`/${page.toLowerCase()}/${dashboardLink.toLowerCase()}`}>
+                    <ListItemButton to={`/${page.toLowerCase()}/${dashboardLink}`}>
                       <ListItemText
                         primary={page}
                         sx={{ opacity: open ? 1 : 0, fontWeight: 700 }}

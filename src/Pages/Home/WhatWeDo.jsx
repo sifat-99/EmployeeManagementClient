@@ -10,15 +10,22 @@ import {
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
+import useAxiosPublic from "../../Components/hooks/useAxiosPublic";
 
 export default function WhatWeDo() {
   const [data, setData] = useState([]);
 
+  const axiosPublic = useAxiosPublic();
+
   useEffect(() => {
-    fetch("FakeData.json")
-      .then((res) => res.json())
-      .then((data) => setData(data));
-  }, []);
+    axiosPublic
+      .get("/services")
+      .then((res) => {
+        // console.log(res);
+        setData(res.data);
+      })
+      .catch((err) => console.log(err));
+  }, [axiosPublic]);
   return (
     <Box
       sx={{

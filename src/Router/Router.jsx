@@ -51,12 +51,12 @@ export const Router = createBrowserRouter([
                 element:<HrPage></HrPage>
             },
             {
-                path: 'payment history',
+                path: 'hr-payment history',
                 element:<h1>Payment History</h1>
             },
             {
-                path: 'appointment',
-                element:<h1>Appointment</h1>
+                path: 'hr-home',
+                element:<HrPage></HrPage>
             }
         ]
     }

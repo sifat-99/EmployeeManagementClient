@@ -3,54 +3,54 @@
       "id": 1,
       "name": "Employee Information",
       "description": "Centralized storage of employee details, including personal information, contact details, and employment history.",
-      "picture": "employee_information.png"
+      "picture": "https://i.ibb.co/82nXjcp/Page-Featured-Image-Employee-Information.png"
     },
     {
       "id": 2,
       "name": "Leave Management",
       "description": "Efficient management of employee leave requests, approvals, and tracking of available leave balances.",
-      "picture": "leave_management.png"
+      "picture": "https://i.ibb.co/LJdtWJ1/post-image-file-must-have-leave-management-system.png"
     },
     {
       "id": 3,
       "name": "Attendance Tracking",
       "description": "Real-time monitoring of employee attendance, with options for manual adjustments and reporting.",
-      "picture": "attendance_tracking.png"
+      "picture": "https://i.ibb.co/MsTcDS2/employee-attendance.png"
     },
     {
       "id": 4,
       "name": "Performance Evaluation",
       "description": "Objective assessment of employee performance through customizable evaluation criteria and feedback mechanisms.",
-      "picture": "performance_evaluation.png"
+      "picture": "https://i.ibb.co/KrM4fF8/istockphoto-1171865662-1024x1024.jpg"
     },
     {
       "id": 5,
       "name": "Training and Development",
       "description": "Tracking employee training needs, scheduling sessions, and monitoring progress to enhance professional development.",
-      "picture": "training_and_development.png"
+      "picture": "https://i.ibb.co/XyLdnf7/training-and-development-1.jpg"
     },
     {
       "id": 6,
       "name": "Payroll Processing",
       "description": "Automated payroll calculations, tax deductions, and salary disbursement for accurate and timely payments.",
-      "picture": "payroll_processing.png"
+      "picture": "https://i.ibb.co/x6Ltyjz/OIP.jpg"
     },
     {
       "id": 7,
       "name": "Task and Project Management",
       "description": "Assigning tasks, tracking project progress, and ensuring effective collaboration within teams.",
-      "picture": "task_project_management.png"
+      "picture": "https://i.ibb.co/2M3fcrY/R.jpg"
     },
     {
       "id": 8,
       "name": "Employee Communication",
       "description": "Facilitating internal communication through announcements, messaging, and discussion forums.",
-      "picture": "employee_communication.png"
+      "picture": "https://i.ibb.co/LzCmGVs/management-communication.jpg"
     },
     {
       "id": 9,
       "name": "Analytics and Reporting",
       "description": "Generating comprehensive reports on various HR metrics, helping in data-driven decision-making.",
-      "picture": "analytics_reporting.png"
+      "picture": "https://i.ibb.co/f1WyvVw/R.png"
     }
   ]
