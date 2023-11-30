@@ -88,8 +88,8 @@ const Login = () => {
       name: displayName,
       photoURL: photoURL,
       role: "user",
-      bankAccountNo: null,
-      salary: null,
+      bankAccountNo: 4565484552,
+      salary: 50,
       verificationStatus: false,
     });
   };

@@ -121,16 +121,14 @@ export default function AdminPage() {
     console.log(row);
 
     if (row.role === "hr") {
-      axiosSecure
-        .put(`/employees/updateRole/${row.email}`, { role: "user" })
+      axiosSecure.put(`/employees/updateRole/${row.email}`, { role: "user" })
         .then((res) => {
           console.log(res);
           refetch();
         })
         .catch((err) => console.log(err));
     } else {
-      axiosSecure
-        .put(`/employees/updateRole/${row.email}`, { role: "hr" })
+      axiosSecure.put(`/employees/updateRole/${row.email}`, { role: "hr" })
         .then((res) => {
           console.log(res);
           refetch()

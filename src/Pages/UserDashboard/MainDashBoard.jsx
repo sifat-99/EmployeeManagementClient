@@ -99,7 +99,7 @@ export default function MainDashboard() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
-  const [role, setRole] = React.useState("");
+  // const [role, setRole] = React.useState("");
   const axiosPublic = useAxiosPublic();
 
   const [navItems, setNavItems] = React.useState([]);
@@ -160,8 +160,8 @@ export default function MainDashboard() {
         },
       ];
 
-      setRole(res.data.role);
-      // console.log(role)
+      // setRole(res.data.role);
+      console.log(res.data.role)
 
       if (res.data.role === "admin") {
         setNavItems(adminItems);
@@ -169,12 +169,12 @@ export default function MainDashboard() {
       if (res.data.role === "hr") {
         setNavItems(HrItems);
       }
-      else
+      else if(res.data.role === "user")
       {
         setNavItems(userItems);
       }
     });
-  }, [axiosPublic, user.email, role]);
+  }, [axiosPublic, user.email]);
 
   return (
     <Box sx={{ display: "flex" }}>

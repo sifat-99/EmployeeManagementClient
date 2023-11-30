@@ -9,6 +9,7 @@ import Dashboard from "../Pages/UserDashboard/Dashboard";
 import AdminPage from "../Pages/UserDashboard/AdminPages/AdminPage";
 import HrPage from "../Pages/UserDashboard/HRpage/HRPage";
 import HR_SpecificUserDetails from "../Pages/UserDashboard/HRpage/HR_SpecificUserDetails";
+import UserForm from "../Pages/UserDashboard/UserPages/UserWorkSheet";
 
 
 export const Router = createBrowserRouter([
@@ -50,6 +51,10 @@ export const Router = createBrowserRouter([
                 path: 'admin-home',
                 element:<AdminPage></AdminPage>
             },
+            {
+                path: 'admin-profile',
+                element:<h1>Admin Profile</h1>
+            },
 
             // user Routes
             {
@@ -63,6 +68,10 @@ export const Router = createBrowserRouter([
             {
                 path: 'user-payment history',
                 element:<h1>Payment History</h1>
+            },
+            {
+                path: 'work sheet',
+                element:<UserForm></UserForm>
             },
             
             // HR-Routes

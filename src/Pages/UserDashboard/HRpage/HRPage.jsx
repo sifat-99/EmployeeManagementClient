@@ -148,7 +148,7 @@ export default function HrPage() {
             showConfirmButton: true,
             timer: 1500,
           });
-          refetch()
+          refetch();
         }
       });
   };
