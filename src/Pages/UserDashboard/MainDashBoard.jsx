@@ -161,7 +161,7 @@ export default function MainDashboard() {
       ];
 
       setRole(res.data.role);
-      console.log(role)
+      // console.log(role)
 
       if (res.data.role === "admin") {
         setNavItems(adminItems);

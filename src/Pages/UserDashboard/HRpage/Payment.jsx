@@ -16,22 +16,25 @@ const style = {
   p: 4,
 };
 
-export default function PaymentPage() {
+export default function PaymentPage(user) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+//   console.log(user.user)
+  const isVerified = user.user.verificationStatus;
 
   return (
-    <div>
-      <Button onClick={handleOpen}>Pay</Button>
+    <div >
+      <Button onClick={handleOpen} variant="outlined" disabled={!isVerified}  >Pay</Button>
       <Modal
         open={open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
+       
       >
         <Box sx={style}>
-          <Payment></Payment>
+          <Payment user={{user}}></Payment>
         </Box>
       </Modal>
     </div>

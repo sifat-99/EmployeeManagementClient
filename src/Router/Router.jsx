@@ -8,6 +8,7 @@ import Page from "../Pages/ErrorPage/Error";
 import Dashboard from "../Pages/UserDashboard/Dashboard";
 import AdminPage from "../Pages/UserDashboard/AdminPages/AdminPage";
 import HrPage from "../Pages/UserDashboard/HRpage/HRPage";
+import HR_SpecificUserDetails from "../Pages/UserDashboard/HRpage/HR_SpecificUserDetails";
 
 
 export const Router = createBrowserRouter([
@@ -42,22 +43,46 @@ export const Router = createBrowserRouter([
         path:'/dashboard',
         element:<PrivateRoute><Dashboard></Dashboard></PrivateRoute>,
         children:[
+
+            // Admin routes
+
             {
-                path: 'user-home',
+                path: 'admin-home',
                 element:<AdminPage></AdminPage>
             },
+
+            // user Routes
             {
-                path: 'profile',
-                element:<HrPage></HrPage>
+                path: 'user-home',
+                element:<h1>User Home</h1>
             },
             {
-                path: 'hr-payment history',
+                path: 'user-profile',
+                element:<h1>User Profile</h1>
+            },
+            {
+                path: 'user-payment history',
                 element:<h1>Payment History</h1>
             },
+            
+            // HR-Routes
             {
                 path: 'hr-home',
                 element:<HrPage></HrPage>
-            }
+            },
+            {
+                path: ':email',
+                element:<HR_SpecificUserDetails></HR_SpecificUserDetails>,
+                loader: ({params})=>{
+                        // console.log(params.email)
+                        return params.email;
+                }
+            },
+            {
+                path: 'hr-payment history',
+                element:<h1> HR Payment History</h1>
+            },
+
         ]
     }
 ])

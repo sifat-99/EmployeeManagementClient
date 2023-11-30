@@ -15,8 +15,9 @@ import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import { Button, TableHead, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
-import useAxiosPublic from "../../../Components/hooks/useAxiosPublic";
+import {  useState } from "react";
+import useAxiosSecure from "../../../Components/hooks/useAxiosSecure";
+import useEmployee from "../../../Components/hooks/useEmployee";
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -88,25 +89,15 @@ TablePaginationActions.propTypes = {
 };
 
 export default function AdminPage() {
-
-  const axiosPublic = useAxiosPublic()
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const axiosSecure = useAxiosSecure();
+  const [AllData,refetch] = useEmployee();
+  console.log(AllData);
 
-  const [data, setData] = useState([]);
+  const filteredData = AllData.filter((data) => data.verificationStatus == true && data.role !== 'admin' || data.role === 'hr');
 
-  console.log(data)
-
-  useEffect(() => {
-    axiosPublic.get('/Employees')
-    .then(res => {
-      console.log(res);
-      setData(res.data)
-    })
-    .catch(err => console.log(err))
-  }, [axiosPublic]);
-
-  const rows = data.sort((a, b) => (a.name < b.name ? -1 : 1));
+  const rows = filteredData.sort((a, b) => (a.name < b.name ? -1 : 1));
 
   console.log(rows);
 
@@ -126,11 +117,39 @@ export default function AdminPage() {
     console.log(row);
   };
 
+  const handleManageHr = (row) => {
+    console.log(row);
+
+    if (row.role === "hr") {
+      axiosSecure
+        .put(`/employees/updateRole/${row.email}`, { role: "user" })
+        .then((res) => {
+          console.log(res);
+          refetch();
+        })
+        .catch((err) => console.log(err));
+    } else {
+      axiosSecure
+        .put(`/employees/updateRole/${row.email}`, { role: "hr" })
+        .then((res) => {
+          console.log(res);
+          refetch()
+        })
+        .catch((err) => console.log(err));
+    }
+  };
+
   return (
     <TableContainer component={Paper} sx={{ mt: "64px" }}>
       <Typography
         variant="h3"
-        sx={{ textAlign: "center", mt: 2, mb: 2, textDecoration: "underline", fontWeight:700 }}
+        sx={{
+          textAlign: "center",
+          mt: 2,
+          mb: 2,
+          textDecoration: "underline",
+          fontWeight: 700,
+        }}
       >
         Employee List
       </Typography>
@@ -163,18 +182,19 @@ export default function AdminPage() {
                 {row._id}
               </TableCell>
               <TableCell align="left">{row.name}</TableCell>
-              <TableCell align="left">{row.firstName}</TableCell>
+              <TableCell align="left">{row.role}</TableCell>
               <TableCell style={{ width: "auto" }} align="left">
                 {row.email}
               </TableCell>
-              
+
               <TableCell>
                 <Button
                   variant="contained"
                   color="primary"
-                  sx={{textTransform: 'none', fontWeight:700}}
+                  sx={{ textTransform: "none", fontWeight: 700 }}
+                  onClick={() => handleManageHr(row)}
                 >
-                  Make HR
+                  {row.role === "hr" ? "Remove HR" : "Make HR"}
                 </Button>
               </TableCell>
               <TableCell>
@@ -182,7 +202,7 @@ export default function AdminPage() {
                   variant="contained"
                   color="primary"
                   onClick={() => handleButtonClick(row)}
-                  sx={{textTransform: 'none', fontWeight:700}}
+                  sx={{ textTransform: "none", fontWeight: 700 }}
                 >
                   Fire
                 </Button>

@@ -7,6 +7,8 @@ import {loadStripe} from '@stripe/stripe-js';
 
 import { CheckoutForm } from './ChecoutForm';
 import { Elements } from '@stripe/react-stripe-js';
+import PropTypes from 'prop-types'
+
 const stripePromise = loadStripe(import.meta.env.VITE_PAYMENT_API_KEY);
 
 
@@ -15,12 +17,16 @@ const stripePromise = loadStripe(import.meta.env.VITE_PAYMENT_API_KEY);
 // recreating the `Stripe` object on every render.
 // const stripePromise = loadStripe('pk_test_6pRNASCoBOKtIshFeQd4XMUh');
 
-const Payment = () => {
+const Payment = ({user}) => {
   return (
     <Elements stripe={stripePromise}>
-      <CheckoutForm></CheckoutForm>
+      <CheckoutForm user={user}></CheckoutForm>
     </Elements>
   );
 };
+
+Payment.propTypes = {
+  user: PropTypes.object.isRequired
+}
 
 export default Payment;

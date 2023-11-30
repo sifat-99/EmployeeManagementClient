@@ -15,13 +15,14 @@ import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import { Button, TableHead, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckIcon from "@mui/icons-material/Check";
 import { Link } from "react-router-dom";
 import useAxiosPublic from "../../../Components/hooks/useAxiosPublic";
 import PaymentPage from "./Payment";
-// import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
+import useEmployee from "../../../Components/hooks/useEmployee";
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -95,25 +96,29 @@ TablePaginationActions.propTypes = {
 export default function HrPage() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [AllData, refetch] = useEmployee();
 
-  const [data, setData] = useState([]);
-  const [verified, setVerified] = useState(false);
-  const axiosPublic = useAxiosPublic()
+  // const [data, setData] = useState([]);
+  const axiosPublic = useAxiosPublic();
 
-  useEffect(() => {
-    axiosPublic
-      .get("/employees")
-      .then((res) => {
-        const allUsers = res.data.filter (user => user.role === "user")
-        setData(allUsers)
+  // useEffect(() => {
+  //   axiosPublic
+  //     .get("/employees")
+  //     .then((res) => {
+  //       const allUsers = res.data.filter((user) => user.role === "user");
+  //       setData(allUsers);
+  //     })
+  //     .catch((err) => console.log(err));
+  // }, [axiosPublic]);
 
-      })
-      .catch((err) => console.log(err));
-  }, [axiosPublic]);
+  const data = AllData.filter((user) => user.role === "user");
+  console.log(data);
+
+  // console.log(data)
 
   const rows = data.sort((a, b) => (a.firstName < b.firstName ? -1 : 1));
 
-  console.log(rows);
+  // console.log(rows);
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
@@ -128,8 +133,24 @@ export default function HrPage() {
   };
 
   const handleVerification = (row) => {
-    console.log(row);
-    setVerified(!verified);
+
+    console.log(row.verificationStatus);
+    axiosPublic.put(`/employees/${row.uid}`, {
+        verificationStatus: !row.verificationStatus,
+      })
+      .then((res) => {
+        console.log(res.data);
+        if (res.data.modifiedCount > 0) {
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Verification Status Updated",
+            showConfirmButton: true,
+            timer: 1500,
+          });
+          refetch()
+        }
+      });
   };
 
   return (
@@ -175,8 +196,8 @@ export default function HrPage() {
             ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             : rows
           ).map((row) => (
-            <TableRow key={row.id}>
-              <TableCell align="left">{row.firstName}</TableCell>
+            <TableRow key={row.email}>
+              <TableCell align="left">{row.name}</TableCell>
               <TableCell style={{ width: "auto" }} align="left">
                 {row.email}
               </TableCell>
@@ -184,35 +205,31 @@ export default function HrPage() {
                 <Button
                   variant="contained"
                   onClick={() => handleVerification(row)}
-                  sx={{ backgroundColor: verified ? "green" : "red" }}
+                  sx={{
+                    backgroundColor: row.verificationStatus ? "green" : "red",
+                  }}
                 >
-                  {verified ? <CheckIcon /> : <CancelIcon />}
+                  {row.verificationStatus ? <CheckIcon /> : <CancelIcon />}
                 </Button>
               </TableCell>
               <TableCell style={{ width: "auto" }} align="left">
                 {row.id}
               </TableCell>
               <TableCell style={{ width: "auto" }} align="center">
-                {"Apatoto nai"}
+                {row.salary}
               </TableCell>
               <TableCell>
-                <Button variant="outlined">
-                  <PaymentPage></PaymentPage>
-                </Button>
+                <div>
+                  <PaymentPage user={row}></PaymentPage>
+                </div>
               </TableCell>
-              {/* <TableCell>
-                <Link to={`/dashboard/payment history/${row.id}`}>
+              <TableCell>
+                {/* <Link to={`/dashboard/${row.email}`}>
                   <Button variant="contained" color="primary">
                     Details
                   </Button>
-                </Link>
-              </TableCell> */}
-              <TableCell>
-                <Link to={`/dashboard/payment history`}>
-                  <Button variant="contained" color="primary">
-                    Details
-                  </Button>
-                </Link>
+                </Link> */}
+                <Link to={`/dashboard/${row.email}`}>details</Link>
               </TableCell>
             </TableRow>
           ))}
