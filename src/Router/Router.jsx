@@ -10,6 +10,7 @@ import AdminPage from "../Pages/UserDashboard/AdminPages/AdminPage";
 import HrPage from "../Pages/UserDashboard/HRpage/HRPage";
 import HR_SpecificUserDetails from "../Pages/UserDashboard/HRpage/HR_SpecificUserDetails";
 import UserForm from "../Pages/UserDashboard/UserPages/UserWorkSheet";
+import HrPaymentHistory from "../Pages/UserDashboard/HRpage/HrPaymentHistory";
 
 
 export const Router = createBrowserRouter([
@@ -89,7 +90,7 @@ export const Router = createBrowserRouter([
             },
             {
                 path: 'hr-payment history',
-                element:<h1> HR Payment History</h1>
+                element:<HrPaymentHistory></HrPaymentHistory>
             },
 
         ]

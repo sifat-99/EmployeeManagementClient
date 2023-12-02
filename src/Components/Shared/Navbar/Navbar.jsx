@@ -16,6 +16,7 @@ import { ListItemButton, ListItemText } from "@mui/material";
 import useAuth from "../../hooks/useAuth";
 import { useEffect, useState } from "react";
 import useAxiosPublic from "../../hooks/useAxiosPublic";
+import useEmployee from "../../hooks/useEmployee";
 
 const pages = ["Home", "Profile", "Dashboard", "Contact Us"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -51,13 +52,23 @@ function ResponsiveAppBar() {
 
   const axiosPublic = useAxiosPublic();
   const [role, setRole] = useState(null);
+  const [allData,refetch] = useEmployee()
+  console.log(allData)
+
 
   useEffect(() => {
     if (user) {
+     
       console.log(user.email);
-      axiosPublic.get(`/employees/${user.email}`).then((res) => {
+      axiosPublic.get(`/user/role/${user.email}`)
+      .then((res) => {
         console.log(res.data);
         setRole(res.data.role);
+        console.log(res.data.role);
+
+
+        // const role = allData.filter((data) => data.email === user.email);
+        // console.log(role)
 
         if (res.data.role === "admin") {
           setDashboardLink("admin-home");
@@ -71,9 +82,10 @@ function ResponsiveAppBar() {
 
 
 
-      });
+      })
+      refetch()
     }
-  }, [user, setLoading, axiosPublic]);
+  }, [user, setLoading, axiosPublic,allData,refetch]);
 
   console.log(role);
 
@@ -275,7 +287,7 @@ function ResponsiveAppBar() {
                     {setting === "Logout" ? (
                       <Button onClick={handleLogOut}>Logout</Button>
                     ) : (
-                      <Button fullWidth href={setting.toLowerCase()}>
+                      <Button fullWidth href={`${setting.toLowerCase()}/${dashboardLink}`}>
                         {setting}
                       </Button>
                     )}

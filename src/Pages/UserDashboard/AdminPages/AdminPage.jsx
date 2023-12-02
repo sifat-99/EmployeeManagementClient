@@ -16,8 +16,9 @@ import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import { Button, TableHead, Typography } from "@mui/material";
 import {  useState } from "react";
-import useAxiosSecure from "../../../Components/hooks/useAxiosSecure";
 import useEmployee from "../../../Components/hooks/useEmployee";
+import useAxiosPublic from "../../../Components/hooks/useAxiosPublic";
+import Swal from "sweetalert2";
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -91,11 +92,11 @@ TablePaginationActions.propTypes = {
 export default function AdminPage() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const axiosSecure = useAxiosSecure();
+  const axiosPublic = useAxiosPublic()
   const [AllData,refetch] = useEmployee();
   console.log(AllData);
 
-  const filteredData = AllData.filter((data) => data.verificationStatus == true && data.role !== 'admin' || data.role === 'hr');
+  const filteredData = AllData.filter((data) => data.verificationStatus == true && data.role !== 'admin' || data.role === 'hr'||data.role ==='employee');
 
   const rows = filteredData.sort((a, b) => (a.name < b.name ? -1 : 1));
 
@@ -115,20 +116,35 @@ export default function AdminPage() {
 
   const handleButtonClick = (row) => {
     console.log(row);
+    axiosPublic.delete(`/user/delete/${row.email}`)
+      .then((res) => {
+        console.log(res);
+        if(res.data.deletedCount === 1)
+        {
+          Swal.fire({
+            icon: 'success',
+            title: 'Employee Fired',
+            text: 'Employee has been fired successfully',
+          })
+        }
+        refetch();
+      })
+      .catch((err) => console.log(err));
+
   };
 
   const handleManageHr = (row) => {
     console.log(row);
 
     if (row.role === "hr") {
-      axiosSecure.put(`/employees/updateRole/${row.email}`, { role: "user" })
+      axiosPublic.put(`/user/updateRole/${row.email}`, { role: "employee" })
         .then((res) => {
           console.log(res);
           refetch();
         })
         .catch((err) => console.log(err));
     } else {
-      axiosSecure.put(`/employees/updateRole/${row.email}`, { role: "hr" })
+      axiosPublic.put(`/user/updateRole/${row.email}`, { role: "hr" })
         .then((res) => {
           console.log(res);
           refetch()

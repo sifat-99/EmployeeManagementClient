@@ -4,7 +4,10 @@ import {
   Button,
   Grid,
   Input,
+  InputLabel,
+  MenuItem,
   Paper,
+  Select,
   TextField,
   Typography,
 } from "@mui/material";
@@ -24,6 +27,7 @@ const Registration = () => {
   const { createUser, logOut,updateUser } = useAuth()
   const navigate = useNavigate();
   const [selectedFile, setSelectedFile] = useState(null);
+  const [type, setType] = useState('user');
 
   const axiosPublic = useAxiosPublic();
   
@@ -103,16 +107,16 @@ const Registration = () => {
   };
 
   const handleSetUserToDB = (uid) => {
-    axiosPublic.post("/employees", {
+    axiosPublic.post("/users", {
       uid: uid,
       email: email,
       name: name,
       photoURL: selectedFile,
-      role: "user",
+      role: type,
       bankAccountNo: null,
-      salary: null,
+      salary: 0,
       verificationStatus: false,
-    });
+    })
   };
 
   const handleFileChange = (event) => {
@@ -132,6 +136,11 @@ const Registration = () => {
   };
 
   console.log(selectedFile);
+
+
+  const handleRoleChange = (event) => {
+    setType(event.target.value);
+  };
 
   return (
     <Grid>
@@ -167,6 +176,7 @@ const Registration = () => {
             </Button>
           </div>
         </Box>
+        <div style={{display:'flex' , flexDirection:'column', marginBottom:'12px'}}>
         <TextField
           onChange={handleRegistrationEmail}
           name="email"
@@ -176,6 +186,22 @@ const Registration = () => {
           fullWidth
           required
         />
+        <Box>
+        <InputLabel id="demo-simple-select-label">Select Category</InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={type}
+          label="Age"
+          onChange={handleRoleChange}
+        >
+          <MenuItem value={'user'}>User</MenuItem>
+          <MenuItem value={'hr'}>HR</MenuItem>
+          <MenuItem value={'employee'}>Employee</MenuItem>
+        </Select>
+        </Box>
+
+        </div>
         <TextField
           onChange={handleRegistrationPassword}
           name="password"

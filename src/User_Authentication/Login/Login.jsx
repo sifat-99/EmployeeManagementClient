@@ -122,8 +122,8 @@ const Login = () => {
           onChange={handleLoginEmail}
           name="email"
           sx={{ mb: 2 }}
-          label="Username"
-          placeholder="Enter username"
+          label="Email"
+          placeholder="Enter email"
           fullWidth
           required
         />

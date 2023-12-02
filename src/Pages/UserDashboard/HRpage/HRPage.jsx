@@ -98,20 +98,13 @@ export default function HrPage() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [AllData, refetch] = useEmployee();
 
+  // const [status, setStatus] = useState('user');
+
   // const [data, setData] = useState([]);
   const axiosPublic = useAxiosPublic();
+  refetch()
 
-  // useEffect(() => {
-  //   axiosPublic
-  //     .get("/employees")
-  //     .then((res) => {
-  //       const allUsers = res.data.filter((user) => user.role === "user");
-  //       setData(allUsers);
-  //     })
-  //     .catch((err) => console.log(err));
-  // }, [axiosPublic]);
-
-  const data = AllData.filter((user) => user.role === "user");
+  const data = AllData.filter((user) => user.role === "user" || user.role === "employee");
   console.log(data);
 
   // console.log(data)
@@ -131,23 +124,40 @@ export default function HrPage() {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+  const [role,setRole] = useState('user');
 
   const handleVerification = (row) => {
 
+    if(row.verificationStatus ){
+      setRole('employee')
+    }
+    else
+    {
+      setRole('user')
+    }
+
     console.log(row.verificationStatus);
-    axiosPublic.put(`/employees/${row.uid}`, {
+    axiosPublic.put(`/users/${row.uid}`, {
         verificationStatus: !row.verificationStatus,
+        role: role,
       })
       .then((res) => {
         console.log(res.data);
         if (res.data.modifiedCount > 0) {
-          Swal.fire({
-            position: "center",
-            icon: "success",
-            title: "Verification Status Updated",
-            showConfirmButton: true,
-            timer: 1500,
-          });
+          if(row.role === 'user'){
+            Swal.fire({
+              icon: "success",
+              title: "User Verified",
+              text: "User is now verified and an Employee",
+            });
+          }
+          else{
+            Swal.fire({
+              icon: "success",
+              title: "User Unverified",
+              text: "User is now unverified",
+            });
+          }
           refetch();
         }
       });
@@ -178,6 +188,9 @@ export default function HrPage() {
             <TableCell>Status</TableCell>
             <TableCell style={{ width: 160 }} align="left">
               Bank Account
+            </TableCell>
+            <TableCell style={{ width: 160 }} align="left">
+              Role
             </TableCell>
 
             <TableCell style={{ width: 160 }} align="center">
@@ -214,6 +227,9 @@ export default function HrPage() {
               </TableCell>
               <TableCell style={{ width: "auto" }} align="left">
                 {row.id}
+              </TableCell>
+              <TableCell style={{ width: "auto" }} align="left">
+                {row.role}
               </TableCell>
               <TableCell style={{ width: "auto" }} align="center">
                 {row.salary}
