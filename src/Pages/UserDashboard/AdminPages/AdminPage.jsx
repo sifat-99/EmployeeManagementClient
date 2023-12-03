@@ -125,6 +125,7 @@ export default function AdminPage() {
             icon: 'success',
             title: 'Employee Fired',
             text: 'Employee has been fired successfully',
+            confirmButtonText: 'Ok'
           })
         }
         refetch();

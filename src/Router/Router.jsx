@@ -11,6 +11,8 @@ import HrPage from "../Pages/UserDashboard/HRpage/HRPage";
 import HR_SpecificUserDetails from "../Pages/UserDashboard/HRpage/HR_SpecificUserDetails";
 import UserForm from "../Pages/UserDashboard/UserPages/UserWorkSheet";
 import HrPaymentHistory from "../Pages/UserDashboard/HRpage/HrPaymentHistory";
+import AdminPrivateRoute from "../Pages/UserDashboard/AdminPages/AdminPrivateRoute";
+import HrPrivateRoute from "../Pages/UserDashboard/HRpage/HrPrivatePage";
 
 
 export const Router = createBrowserRouter([
@@ -50,11 +52,11 @@ export const Router = createBrowserRouter([
 
             {
                 path: 'admin-home',
-                element:<AdminPage></AdminPage>
+                element:<AdminPrivateRoute><AdminPage></AdminPage></AdminPrivateRoute>
             },
             {
                 path: 'admin-profile',
-                element:<h1>Admin Profile</h1>
+                element:<AdminPrivateRoute><h1>Admin Profile</h1></AdminPrivateRoute>
             },
 
             // user Routes
@@ -78,19 +80,18 @@ export const Router = createBrowserRouter([
             // HR-Routes
             {
                 path: 'hr-home',
-                element:<HrPage></HrPage>
+                element:<HrPrivateRoute><HrPage></HrPage></HrPrivateRoute>
             },
             {
                 path: ':email',
-                element:<HR_SpecificUserDetails></HR_SpecificUserDetails>,
+                element:<HrPrivateRoute><HR_SpecificUserDetails></HR_SpecificUserDetails></HrPrivateRoute>,
                 loader: ({params})=>{
-                        // console.log(params.email)
                         return params.email;
                 }
             },
             {
                 path: 'hr-payment history',
-                element:<HrPaymentHistory></HrPaymentHistory>
+                element:<HrPrivateRoute><HrPaymentHistory></HrPaymentHistory></HrPrivateRoute>
             },
 
         ]
